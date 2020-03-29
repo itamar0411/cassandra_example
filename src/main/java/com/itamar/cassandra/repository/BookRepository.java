@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class BookRepository {
 
-    Session session = null;
+    Session session;
 
     public BookRepository(Session session) {
         this.session = session;
@@ -25,6 +25,16 @@ public class BookRepository {
                 .append("author text,")
                 .append("subject text);");
 
+        String query = sb.toString();
+        session.execute(query);
+    }
+
+    public void createBookByTitleColumnFamily() {
+        StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
+                .append("library.bookByTitle").append("(")
+                .append("id uuid, ")
+                .append("title text,")
+                .append("PRIMARY KEY (title, id));");
         String query = sb.toString();
         session.execute(query);
     }
@@ -59,9 +69,7 @@ public class BookRepository {
         String query = sb.toString();
         ResultSet rs = session.execute(query);
 
-        List<Book> books = new ArrayList<Book>();
-
-        books = rs.all().stream().map(r->rowToBook(r)).collect(Collectors.toList());
+        List<Book> books = rs.all().stream().map(r->rowToBook(r)).collect(Collectors.toList());
 
        return books;
     }

@@ -40,11 +40,27 @@ public class TestBookRepository {
                         .map(cl -> cl.getName())
                         .collect(Collectors.toList());
 
-        assertEquals(columnNames.size(), 4);
+        assertEquals(columnNames.size(), 5);
         assertTrue(columnNames.contains("id"));
         assertTrue(columnNames.contains("title"));
         assertTrue(columnNames.contains("author"));
         assertTrue(columnNames.contains("subject"));
+    }
+
+    @Test
+    public void testCreateBookByTitleColumnFamily() {
+        bookRepository.createBookByTitleColumnFamily();
+        ResultSet result = session.execute(
+                "SELECT * FROM "  + "library.bookByTitle;");
+
+        List<String> columnNames =
+                result.getColumnDefinitions().asList().stream()
+                        .map(cl -> cl.getName())
+                        .collect(Collectors.toList());
+
+        assertEquals(columnNames.size(), 2);
+        assertTrue(columnNames.contains("id"));
+        assertTrue(columnNames.contains("title"));
     }
 
     @Test
@@ -62,7 +78,7 @@ public class TestBookRepository {
     }
 
     @Test
-    public void insertBooks() {
+    public void testInsertBooks() {
         bookRepository.createBookColumnFamily();
 
         Book book1 = new Book();
