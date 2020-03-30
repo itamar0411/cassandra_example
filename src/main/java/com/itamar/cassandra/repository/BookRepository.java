@@ -4,12 +4,14 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.itamar.cassandra.entity.Book;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BookRepository {
+
+    private static final String BOOK_TABLE = "library.book";
+    private static final String BOOK_BY_TITLE_TABLE = "library.bookByTitle";
+
 
     Session session;
 
@@ -19,7 +21,7 @@ public class BookRepository {
 
     public void createBookColumnFamily() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-                .append("library.book").append("(")
+                .append(BOOK_TABLE).append("(")
                 .append("id uuid PRIMARY KEY, ")
                 .append("title text,")
                 .append("author text,")
@@ -31,7 +33,7 @@ public class BookRepository {
 
     public void createBookByTitleColumnFamily() {
         StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
-                .append("library.bookByTitle").append("(")
+                .append(BOOK_BY_TITLE_TABLE).append("(")
                 .append("id uuid, ")
                 .append("title text,")
                 .append("PRIMARY KEY (title, id));");
@@ -41,7 +43,7 @@ public class BookRepository {
 
     public void alterBookColumnFamily(String columnName, String columnType) {
         StringBuilder sb = new StringBuilder("ALTER TABLE ")
-                .append("library.book").append(" ADD ")
+                .append(BOOK_TABLE).append(" ADD ")
                 .append(columnName).append(" ")
                 .append(columnType).append(";");
 
@@ -51,7 +53,7 @@ public class BookRepository {
 
     public void insertBook(Book book) {
         StringBuilder sb = new StringBuilder("INSERT INTO ")
-                .append("library.book").append("(id, title, subject, blurb, author) ")
+                .append(BOOK_TABLE).append("(id, title, subject, blurb, author) ")
                 .append("VALUES (").append(book.getId())
                 .append(", '").append(book.getTitle()+"'")
                 .append(", '").append(book.getSubject()+"'")
@@ -62,16 +64,42 @@ public class BookRepository {
         session.execute(query);
     }
 
+    public void insertBookByTitle(Book book) {
+        String query = "INSERT INTO " + BOOK_BY_TITLE_TABLE + " (id, title) VALUES (" +
+                book.getId() + ",'" + book.getTitle() + "');";
+        session.execute(query);
+    }
+
     public List<Book> selectAllBooks() {
-        StringBuilder sb =
-                new StringBuilder("SELECT * FROM ").append("library.book");
-
-        String query = sb.toString();
+        String query = "SELECT * FROM " + BOOK_TABLE;
         ResultSet rs = session.execute(query);
-
         List<Book> books = rs.all().stream().map(r->rowToBook(r)).collect(Collectors.toList());
-
        return books;
+    }
+
+    public List<Book> selectAllBooksByTitle() {
+        String query = "SELECT * FROM " + BOOK_BY_TITLE_TABLE;
+        ResultSet rs = session.execute(query);
+        List<Book> books = rs.all().stream().map(r->rowToBookByTitle(r)).collect(Collectors.toList());
+        return books;
+    }
+
+    public void insertBookBatch(Book book) {
+
+        String query = "BEGIN BATCH INSERT INTO " + BOOK_TABLE
+                + " (id, title, subject, blurb, author) VALUES ("
+                + book.getId() + ", '"
+                + book.getTitle() + "' , '"
+                + book.getSubject() + "' , '"
+                + book.getBlurb() + "' , '"
+                + book.getAuthor() + "')"
+                + " INSERT INTO " + BOOK_BY_TITLE_TABLE
+                + " (id, title) VALUES ("
+                + book.getId() + ", '"
+                + book.getTitle() + "'); "
+                + "APPLY BATCH";
+
+            session.execute(query);
     }
 
     private Book rowToBook(Row row) {
@@ -82,6 +110,13 @@ public class BookRepository {
         book.setBlurb(row.getString("blurb"));
         book.setAuthor(row.getString("author"));
 
+        return book;
+    }
+
+    private Book rowToBookByTitle(Row row) {
+        Book book = new Book();
+        book.setId(row.getUUID("id"));
+        book.setTitle(row.getString("title"));
         return book;
     }
 

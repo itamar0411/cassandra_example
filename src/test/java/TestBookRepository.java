@@ -104,6 +104,43 @@ public class TestBookRepository {
 
     }
 
+    @Test
+    public void testInsetBooksByTitle() {
+        bookRepository.createBookByTitleColumnFamily();
+
+        Book book = new Book();
+        book.setId(UUIDs.timeBased());
+        book.setTitle("Designing Data-Intensive Applications");
+
+        bookRepository.insertBookByTitle(book);
+
+        List<Book> books = bookRepository.selectAllBooksByTitle();
+
+        assertEquals(books.size(), 1);
+    }
+
+    @Test
+    public void testBatchInsert() {
+        bookRepository.createBookColumnFamily();
+        bookRepository.createBookByTitleColumnFamily();
+
+        Book book1 = new Book();
+        book1.setId(UUIDs.timeBased());
+        book1.setTitle("Designing Data-Intensive Applications");
+        book1.setAuthor("Martin Kleppmann");
+        book1.setBlurb("Principles on how to build data-intensive applications");
+        book1.setSubject("Software Systems");
+
+        bookRepository.insertBookBatch(book1);
+
+        List<Book> books = bookRepository.selectAllBooks();
+        List<Book> booksByTitle = bookRepository.selectAllBooksByTitle();
+
+        assertEquals(books.get(0).getTitle(), booksByTitle.get(0).getTitle());
+
+
+    }
+
     @After
     public void closeConnection() {
         cassandraConnection.close();
