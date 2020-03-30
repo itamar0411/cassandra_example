@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class BookRepository {
 
-    private static final String BOOK_TABLE = "library.book";
-    private static final String BOOK_BY_TITLE_TABLE = "library.bookByTitle";
+    public static final String BOOK_TABLE = "library.book";
+    public static final String BOOK_BY_TITLE_TABLE = "library.bookByTitle";
 
 
     Session session;
@@ -100,6 +100,11 @@ public class BookRepository {
                 + "APPLY BATCH";
 
             session.execute(query);
+    }
+
+    public void deleteColumnFamily(String table) {
+        String query = "DROP TABLE IF EXISTS " + table;
+        session.execute(query);
     }
 
     private Book rowToBook(Row row) {

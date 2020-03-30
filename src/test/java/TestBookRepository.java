@@ -1,5 +1,6 @@
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.exceptions.InvalidQueryException;
 import com.datastax.driver.core.utils.UUIDs;
 import com.itamar.cassandra.connector.CassandraConnection;
 import com.itamar.cassandra.entity.Book;
@@ -139,6 +140,16 @@ public class TestBookRepository {
         assertEquals(books.get(0).getTitle(), booksByTitle.get(0).getTitle());
 
 
+    }
+
+    @Test(expected = InvalidQueryException.class)
+    public void deleteColumFamily() {
+        bookRepository.createBookColumnFamily();
+        bookRepository.createBookByTitleColumnFamily();
+        bookRepository.deleteColumnFamily(BookRepository.BOOK_TABLE);
+        bookRepository.deleteColumnFamily(BookRepository.BOOK_BY_TITLE_TABLE);
+
+        session.execute("SELECT * FROM " + BookRepository.BOOK_TABLE);
     }
 
     @After
