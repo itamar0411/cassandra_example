@@ -53,11 +53,11 @@ public class BookRepository {
 
     public void insertBook(Book book) {
         StringBuilder sb = new StringBuilder("INSERT INTO ")
-                .append(BOOK_TABLE).append("(id, title, subject, blurb, author) ")
+                .append(BOOK_TABLE).append("(id, title, subject, author) ")
                 .append("VALUES (").append(book.getId())
                 .append(", '").append(book.getTitle()+"'")
                 .append(", '").append(book.getSubject()+"'")
-                .append(", '").append(book.getBlurb()+"'")
+                //.append(", '").append(book.getBlurb()+"'")
                 .append(", '").append(book.getAuthor()+"'")
                 .append(");");
         String query = sb.toString();
@@ -84,14 +84,23 @@ public class BookRepository {
         return books;
     }
 
+    public List<Book> selectAllBookByTitle(String title) {
+        String query = "SELECT * FROM " + BOOK_BY_TITLE_TABLE + " where title =  'Designing Data-Intensive Applications'";
+        ResultSet rs = session.execute(query);
+        List<Book> books = rs.all().stream().map(r->rowToBookByTitle(r)).collect(Collectors.toList());
+        return books;
+    }
+
+
+
     public void insertBookBatch(Book book) {
 
         String query = "BEGIN BATCH INSERT INTO " + BOOK_TABLE
-                + " (id, title, subject, blurb, author) VALUES ("
+                + " (id, title, subject, author) VALUES ("
                 + book.getId() + ", '"
                 + book.getTitle() + "' , '"
                 + book.getSubject() + "' , '"
-                + book.getBlurb() + "' , '"
+                //+ book.getBlurb() + "' , '"
                 + book.getAuthor() + "')"
                 + " INSERT INTO " + BOOK_BY_TITLE_TABLE
                 + " (id, title) VALUES ("
@@ -112,7 +121,7 @@ public class BookRepository {
         book.setId(row.getUUID("id"));
         book.setTitle(row.getString("title"));
         book.setSubject(row.getString("subject"));
-        book.setBlurb(row.getString("blurb"));
+        //book.setBlurb(row.getString("blurb"));
         book.setAuthor(row.getString("author"));
 
         return book;

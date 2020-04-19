@@ -10,7 +10,7 @@ public class Book {
 
     private String subject;
 
-    private String blurb;
+    //private String blurb;
 
     private String author;
 
@@ -26,9 +26,9 @@ public class Book {
         return subject;
     }
 
-    public String getBlurb() {
-        return blurb;
-    }
+//    public String getBlurb() {
+//        return blurb;
+//    }
 
     public String getAuthor() {
         return author;
@@ -46,9 +46,9 @@ public class Book {
         this.subject = subject;
     }
 
-    public void setBlurb(String blurb) {
-        this.blurb = blurb;
-    }
+//    public void setBlurb(String blurb) {
+//        this.blurb = blurb;
+//    }
 
     public void setAuthor(String author) {
         this.author = author;

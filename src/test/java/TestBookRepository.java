@@ -41,7 +41,7 @@ public class TestBookRepository {
                         .map(cl -> cl.getName())
                         .collect(Collectors.toList());
 
-        assertEquals(columnNames.size(), 5);
+        assertEquals(columnNames.size(), 4);
         assertTrue(columnNames.contains("id"));
         assertTrue(columnNames.contains("title"));
         assertTrue(columnNames.contains("author"));
@@ -64,19 +64,19 @@ public class TestBookRepository {
         assertTrue(columnNames.contains("title"));
     }
 
-    @Test
-    public void testAlterBookColumnFamily() {
-        // creating it, so this test will work standalone
-        bookRepository.createBookColumnFamily();
-
-        bookRepository.alterBookColumnFamily("blurb", "text");
-
-        ResultSet resultSet = session.execute("select * from library.book;");
-
-        boolean columnExists = resultSet.getColumnDefinitions().asList().stream().anyMatch(c->c.getName().equals("blurb"));
-
-        assertTrue(columnExists);
-    }
+//    @Test
+//    public void testAlterBookColumnFamily() {
+//        // creating it, so this test will work standalone
+//        bookRepository.createBookColumnFamily();
+//
+//        bookRepository.alterBookColumnFamily("blurb", "text");
+//
+//        ResultSet resultSet = session.execute("select * from library.book;");
+//
+//        boolean columnExists = resultSet.getColumnDefinitions().asList().stream().anyMatch(c->c.getName().equals("blurb"));
+//
+//        assertTrue(columnExists);
+//    }
 
     @Test
     public void testInsertBooks() {
@@ -86,14 +86,14 @@ public class TestBookRepository {
         book1.setId(UUIDs.timeBased());
         book1.setTitle("Designing Data-Intensive Applications");
         book1.setAuthor("Martin Kleppmann");
-        book1.setBlurb("Principles on how to build data-intensive applications");
+        //book1.setBlurb("Principles on how to build data-intensive applications");
         book1.setSubject("Software Systems");
 
         Book book2 = new Book();
         book2.setId(UUIDs.timeBased());
         book2.setTitle("Design It");
         book2.setAuthor("Michael Keeling");
-        book2.setBlurb("Design it like you mean it");
+        //book2.setBlurb("Design it like you mean it");
         book2.setSubject("Software Systems");
 
         bookRepository.insertBook(book1);
@@ -121,6 +121,14 @@ public class TestBookRepository {
     }
 
     @Test
+    public void testSelectBookByTitle() {
+
+        List<Book> books = bookRepository.selectAllBookByTitle("Designing Data-Intensive Applications");
+
+        assertEquals(books.size(), 1);
+    }
+
+    @Test
     public void testBatchInsert() {
         bookRepository.createBookColumnFamily();
         bookRepository.createBookByTitleColumnFamily();
@@ -129,7 +137,7 @@ public class TestBookRepository {
         book1.setId(UUIDs.timeBased());
         book1.setTitle("Designing Data-Intensive Applications");
         book1.setAuthor("Martin Kleppmann");
-        book1.setBlurb("Principles on how to build data-intensive applications");
+        //book1.setBlurb("Principles on how to build data-intensive applications");
         book1.setSubject("Software Systems");
 
         bookRepository.insertBookBatch(book1);
