@@ -13,7 +13,7 @@ public class BookRepository {
     public static final String BOOK_BY_TITLE_TABLE = "library.bookByTitle";
 
 
-    Session session;
+    private Session session;
 
     public BookRepository(Session session) {
         this.session = session;
