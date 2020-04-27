@@ -67,10 +67,28 @@ public class TestCourseRepository {
         map.put(5, "Algorithms1");
         map.put(6, "Algorithms2");
         map.put(7, "DataStructures");
-
         course.setPrereq(map);
 
+        Course course2 = new Course();
+        course2.setId(6);
+        course2.setName("Algorithms2");
+        course2.setDepartmentid(255);
+        Map<Integer, String> map2 = new HashMap<>();
+        map2.put(5, "Algorithms1");
+        map2.put(7, "DataStructures");
+        course2.setPrereq(map2);
+
+        Course course3 = new Course();
+        course3.setId(5);
+        course3.setName("Algorithms1");
+        course3.setDepartmentid(255);
+        Map<Integer, String> map3 = new HashMap<>();
+        map3.put(7, "DataStructures");
+        course3.setPrereq(map3);
+
         courseRepository.insertCourse(course);
+        courseRepository.insertCourse(course2);
+        courseRepository.insertCourse(course3);
 
         List<Course> courseList = courseRepository.selectAllCourses();
 
