@@ -79,6 +79,14 @@ public class TestCourseRepository {
     }
 
     @Test
+    public void testSelectAllCourses() {
+
+        List<Course> courseList = courseRepository.selectAllCourses();
+
+        assertTrue(courseList.size()>0);
+    }
+
+    @Test
     public void testDeleteAllCourses() {
 
         courseRepository.deleteAllCourses();
