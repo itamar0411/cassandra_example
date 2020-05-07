@@ -86,14 +86,28 @@ public class TestCourseRepository {
         map3.put(7, "DataStructures");
         course3.setPrereq(map3);
 
+        Course course4 = new Course();
+        course4.setId(4);
+        course4.setName("ComputerScienceIntro");
+        course4.setDepartmentid(255);
+
+        Course course5 = new Course();
+        course5.setId(7);
+        course5.setName("DataStructures");
+        course5.setDepartmentid(255);
+        Map<Integer, String> map5 = new HashMap<>();
+        map5.put(4, "ComputerScienceIntro");
+        course5.setPrereq(map5);
+
         courseRepository.insertCourse(course);
         courseRepository.insertCourse(course2);
         courseRepository.insertCourse(course3);
+        courseRepository.insertCourse(course4);
+        courseRepository.insertCourse(course5);
 
         List<Course> courseList = courseRepository.selectAllCourses();
 
         assertTrue(courseList.size() > 0);
-
     }
 
     @Test
