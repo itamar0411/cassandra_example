@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,12 @@ public class TestCourseRepository {
         map.put(6, "Algorithms2");
         map.put(7, "DataStructures");
         course.setPrereq(map);
+        List<String> staff = new ArrayList<>();
+        staff.add("Amitai Sasson");
+        staff.add("David Sasson");
+        staff.add("Hamutal Sasson");
+        staff.add("Itamar Sasson");
+        course.setStaff(staff);
 
         Course course2 = new Course();
         course2.setId(6);

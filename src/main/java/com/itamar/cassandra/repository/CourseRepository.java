@@ -29,6 +29,7 @@ public class CourseRepository {
                 .append("name text,")
                 .append("departmentid int,")
                 .append("prereq map<int,text>,")
+                .append("staff list<text>,")
                 .append("PRIMARY KEY (departmentid,id));");
 
         String query = sb.toString();
@@ -37,11 +38,13 @@ public class CourseRepository {
 
     public void insertCourse(Course course) {
         StringBuilder sb = new StringBuilder("INSERT INTO ")
-                .append(COURSE_TABLE).append("(id, name, departmentid, prereq) ")
+                .append(COURSE_TABLE).append("(id, name, departmentid, prereq, staff) ")
                 .append("VALUES (").append(course.getId())
                 .append(", '").append(course.getName()+"'")
                 .append(", ").append(course.getDepartmentid())
-                .append(", ").append(preparePrereq(course.getPrereq())).append(")");
+                .append(", ").append(preparePrereq(course.getPrereq()))
+                .append(", ").append(prepareStaff(course.getStaff()))
+                .append(")");
         String query = sb.toString();
         session.execute(query);
     }
@@ -59,7 +62,7 @@ public class CourseRepository {
         course.setDepartmentid(row.getInt("departmentid"));
         course.setName(row.getString("name"));
         course.setPrereq(row.getMap("prereq", Integer.class, String.class));
-
+        course.setStaff(row.getList("staff", String.class));
         return course;
     }
 
@@ -87,6 +90,22 @@ public class CourseRepository {
             }
         }
         return "{" + res + "}";
+    }
+
+    private String prepareStaff(List<String> staff) {
+        StringBuilder sb = new StringBuilder();
+        String res = "";
+        Iterator<String> itr = staff.iterator();
+        while(itr.hasNext()) {
+            String member = itr.next();
+            sb.append("'" + member + "'");
+            if(itr.hasNext()) {
+                sb.append(", ");
+            }
+
+        }
+        res = "[" + sb.toString() + "]";
+        return res;
     }
 
 }

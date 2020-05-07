@@ -1,6 +1,8 @@
 package com.itamar.cassandra.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Course {
@@ -9,6 +11,16 @@ public class Course {
     private String name;
     private int departmentid;
     private Map<Integer, String> prereq = new HashMap<>();
+
+    public void setStaff(List<String> staff) {
+        this.staff = staff;
+    }
+
+    public List<String> getStaff() {
+        return staff;
+    }
+
+    private List<String> staff = new ArrayList<>();
 
     public int getId() {
         return id;
