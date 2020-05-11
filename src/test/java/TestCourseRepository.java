@@ -106,11 +106,36 @@ public class TestCourseRepository {
         map5.put(4, "ComputerScienceIntro");
         course5.setPrereq(map5);
 
+        Course course6 = new Course();
+        course6.setId(10);
+        course6.setName("US History");
+        course6.setDepartmentid(200);
+
+        Course course7 = new Course();
+        course7.setId(20);
+        course7.setName("US Geography");
+        course7.setDepartmentid(280);
+
+        Course course8 = new Course();
+        course8.setId(11);
+        course8.setName("Japan History");
+        course8.setDepartmentid(200);
+
+        Course course9 = new Course();
+        course9.setId(21);
+        course9.setName("Chaina Geography");
+        course9.setDepartmentid(280);
+
         courseRepository.insertCourse(course);
         courseRepository.insertCourse(course2);
         courseRepository.insertCourse(course3);
         courseRepository.insertCourse(course4);
         courseRepository.insertCourse(course5);
+        courseRepository.insertCourse(course6);
+        courseRepository.insertCourse(course7);
+        courseRepository.insertCourse(course8);
+        courseRepository.insertCourse(course9);
+
 
         List<Course> courseList = courseRepository.selectAllCourses();
 

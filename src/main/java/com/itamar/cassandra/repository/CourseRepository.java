@@ -30,7 +30,7 @@ public class CourseRepository {
                 .append("departmentid int,")
                 .append("prereq map<int,text>,")
                 .append("staff list<text>,")
-                .append("PRIMARY KEY (departmentid,id));");
+                .append("PRIMARY KEY (departmentid,name));");
 
         String query = sb.toString();
         session.execute(query);
