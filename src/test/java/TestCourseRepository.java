@@ -57,6 +57,15 @@ public class TestCourseRepository {
     public void testInsertCourse() {
         courseRepository.createCourseColumnFamily();
 
+        Course course2 = new Course();
+        course2.setId(6);
+        course2.setName("Algorithms2");
+        course2.setDepartmentid(255);
+        Map<Integer, String> map2 = new HashMap<>();
+        map2.put(5, "Algorithms1");
+        map2.put(7, "DataStructures");
+        course2.setPrereq(map2);
+
         Course course = new Course();
         course.setId(1);
         course.setName("AI");
@@ -70,20 +79,11 @@ public class TestCourseRepository {
         map.put(7, "DataStructures");
         course.setPrereq(map);
         List<String> staff = new ArrayList<>();
-        staff.add("Amitai Sasson");
         staff.add("David Sasson");
         staff.add("Hamutal Sasson");
+        staff.add("Amitai Sasson");
         staff.add("Itamar Sasson");
         course.setStaff(staff);
-
-        Course course2 = new Course();
-        course2.setId(6);
-        course2.setName("Algorithms2");
-        course2.setDepartmentid(255);
-        Map<Integer, String> map2 = new HashMap<>();
-        map2.put(5, "Algorithms1");
-        map2.put(7, "DataStructures");
-        course2.setPrereq(map2);
 
         Course course3 = new Course();
         course3.setId(5);
