@@ -37,6 +37,17 @@ public class CourseRepository {
     }
 
     public void insertCourse(Course course) {
+        String query = prepareInserCourse(course);
+        session.execute(query);
+    }
+
+    public void insertCourseWithTTL(Course course, int ttl) {
+        String query = prepareInserCourse(course);
+        query += " USING TTL " + String.valueOf(ttl);
+        session.execute(query);
+    }
+
+    private String prepareInserCourse(Course course) {
         StringBuilder sb = new StringBuilder("INSERT INTO ")
                 .append(COURSE_TABLE).append("(id, name, departmentid, prereq, staff) ")
                 .append("VALUES (").append(course.getId())
@@ -45,8 +56,7 @@ public class CourseRepository {
                 .append(", ").append(preparePrereq(course.getPrereq()))
                 .append(", ").append(prepareStaff(course.getStaff()))
                 .append(")");
-        String query = sb.toString();
-        session.execute(query);
+        return sb.toString();
     }
 
     public List<Course> selectAllCourses() {

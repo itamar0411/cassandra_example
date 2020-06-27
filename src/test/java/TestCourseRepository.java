@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestCourseRepository {
 
@@ -140,6 +139,32 @@ public class TestCourseRepository {
         List<Course> courseList = courseRepository.selectAllCourses();
 
         assertTrue(courseList.size() > 0);
+    }
+
+    @Test
+    public void testInsertCourseWithTTL() {
+        Course course = new Course();
+        course.setId(8);
+        course.setName("UNIX");
+        course.setDepartmentid(255);
+
+        int ttl_sec = 3;
+
+        courseRepository.insertCourseWithTTL(course, ttl_sec);
+
+        List<Course> courseList = courseRepository.selectAllCourses();
+
+        assertTrue(courseList.contains(course));
+
+        try {
+            Thread.sleep(ttl_sec * 1000);
+        }
+        catch (InterruptedException e) {}
+
+        courseList = courseRepository.selectAllCourses();
+
+        assertFalse(courseList.contains(course));
+
     }
 
     @Test
