@@ -3,9 +3,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import com.itamar.cassandra.connector.CassandraConnection;
 import com.itamar.cassandra.entity.Course;
-import com.itamar.cassandra.entity.Person;
 import com.itamar.cassandra.repository.CourseRepository;
-import com.itamar.cassandra.repository.PersonRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -173,6 +171,12 @@ public class TestCourseRepository {
         List<Course> courseList = courseRepository.selectAllCourses();
 
         assertTrue(courseList.size()>0);
+    }
+
+    @Test
+    public void testSelectCourseById() {
+        Course course = courseRepository.selectCourseById(1);
+        assertTrue(course != null);
     }
 
     @Test

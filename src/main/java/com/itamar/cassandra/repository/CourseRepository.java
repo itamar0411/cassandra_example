@@ -34,6 +34,15 @@ public class CourseRepository {
 
         String query = sb.toString();
         session.execute(query);
+        createIndex("id");
+    }
+
+    private void createIndex(String column) {
+        StringBuilder sb = new StringBuilder("CREATE INDEX ON ")
+                .append(COURSE_TABLE).append(" (" + column + ");");
+        String query = sb.toString();
+        session.execute(query);
+
     }
 
     public void insertCourse(Course course) {
@@ -64,6 +73,16 @@ public class CourseRepository {
         ResultSet rs = session.execute(query);
         List<Course> courseList = rs.all().stream().map(r->rowToCourse(r)).collect(Collectors.toList());
         return courseList;
+    }
+
+    public Course selectCourseById(int id) {
+        String query = "SELECT * FROM " + COURSE_TABLE + " WHERE id = " + String.valueOf(id);
+        ResultSet rs = session.execute(query);
+        List<Course> courseList = rs.all().stream().map(r->rowToCourse(r)).collect(Collectors.toList());
+        if(courseList != null && courseList.size() > 0) {
+            return courseList.get(0);
+        }
+        return null;
     }
 
     private Course rowToCourse(Row row) {
