@@ -8,6 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +55,7 @@ public class TestCourseRepository {
     }
 
     @Test
-    public void testInsertCourse() {
+    public void testInsertCourse() throws IOException {
         courseRepository.createCourseColumnFamily();
 
         Course course2 = new Course();
@@ -81,6 +85,11 @@ public class TestCourseRepository {
         staff.add("Amitai Sasson");
         staff.add("Itamar Sasson");
         course.setStaff(staff);
+        FileInputStream fis=new FileInputStream("/Users/itamarsasson/Documents/passport pictures/Itamar.jpg");
+        byte[] b= new byte[fis.available()+1];
+        int length=b.length;
+        fis.read(b);
+        course.setLecturerPhoto(ByteBuffer.wrap(b));
 
         Course course3 = new Course();
         course3.setId(5);
@@ -123,7 +132,7 @@ public class TestCourseRepository {
         course9.setName("Chaina Geography");
         course9.setDepartmentid(280);
 
-        courseRepository.insertCourse(course);
+        courseRepository.insertCourse2(course);
         courseRepository.insertCourse(course2);
         courseRepository.insertCourse(course3);
         courseRepository.insertCourse(course4);
@@ -191,9 +200,8 @@ public class TestCourseRepository {
 
     @Test(expected = InvalidQueryException.class)
     public void testDropCorseTable() {
-
         courseRepository.dropCourseColumnFamily();
-
+        courseRepository.dropCourseIndex();
         List<Course> courseList = courseRepository.selectAllCourses();
     }
 

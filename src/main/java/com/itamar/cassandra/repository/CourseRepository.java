@@ -1,10 +1,9 @@
 package com.itamar.cassandra.repository;
 
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
 import com.itamar.cassandra.entity.Course;
 
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,7 @@ public class CourseRepository {
                 .append("departmentid int,")
                 .append("prereq map<int,text>,")
                 .append("staff list<text>,")
+                .append("lecturerphoto blob,")
                 .append("PRIMARY KEY (departmentid,name));");
 
         String query = sb.toString();
@@ -38,11 +38,23 @@ public class CourseRepository {
     }
 
     private void createIndex(String column) {
-        StringBuilder sb = new StringBuilder("CREATE INDEX ON ")
+        StringBuilder sb = new StringBuilder("CREATE INDEX IF NOT EXISTS course_id ON ")
                 .append(COURSE_TABLE).append(" (" + column + ");");
         String query = sb.toString();
         session.execute(query);
 
+    }
+
+    public void insertCourse2(Course course) {
+        PreparedStatement ps = session.prepare("insert into university.course ( id, name, departmentid, prereq, staff, lecturerphoto) values(?,?,?,?,?,?)");
+        BoundStatement boundStatement = new BoundStatement(ps);
+        session.execute( boundStatement.bind(
+                course.getId(),
+                course.getName(),
+                course.getDepartmentid(),
+                course.getPrereq(),
+                course.getStaff(),
+                course.getLecturerPhoto()));
     }
 
     public void insertCourse(Course course) {
@@ -92,11 +104,17 @@ public class CourseRepository {
         course.setName(row.getString("name"));
         course.setPrereq(row.getMap("prereq", Integer.class, String.class));
         course.setStaff(row.getList("staff", String.class));
+        course.setLecturerPhoto(row.getBytes("lecturerphoto"));
         return course;
     }
 
     public void dropCourseColumnFamily() {
         String query = "DROP TABLE IF EXISTS " + COURSE_TABLE;
+        session.execute(query);
+    }
+
+    public void dropCourseIndex() {
+        String query = "DROP INDEX IF EXISTS course_id";
         session.execute(query);
     }
 

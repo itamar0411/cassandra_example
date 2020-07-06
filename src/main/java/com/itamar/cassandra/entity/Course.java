@@ -1,5 +1,6 @@
 package com.itamar.cassandra.entity;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class Course {
@@ -8,6 +9,15 @@ public class Course {
     private String name;
     private int departmentid;
     private Map<Integer, String> prereq = new HashMap<>();
+    private ByteBuffer lecturerPhoto;
+
+    public ByteBuffer getLecturerPhoto() {
+        return lecturerPhoto;
+    }
+
+    public void setLecturerPhoto(ByteBuffer lecturerPhoto) {
+        this.lecturerPhoto = lecturerPhoto;
+    }
 
     public void setStaff(List<String> staff) {
         this.staff = staff;
