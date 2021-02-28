@@ -52,6 +52,13 @@ public class PersonRepository {
         return personList;
     }
 
+    public List<String> selectDistinctLastNames() {
+        String query = "SELECT DISTINCT lastname FROM " + PERSON_TABLE;
+        ResultSet rs = session.execute(query);
+        List<String> lastnameList = rs.all().stream().map(r->rowToLastname(r)).collect(Collectors.toList());
+        return lastnameList;
+    }
+
     private Person rowToPerson(Row row) {
         Person person = new Person();
         person.setId(row.getUUID("id"));
@@ -60,6 +67,11 @@ public class PersonRepository {
         person.setSsn(row.getLong("ssn"));
 
         return person;
+    }
+
+    private String rowToLastname(Row row) {
+        String lastname = row.getString("lastname");
+        return lastname;
     }
 
     public void dropPersonColumnFamily() {

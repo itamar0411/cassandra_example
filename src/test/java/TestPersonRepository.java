@@ -3,9 +3,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import com.datastax.driver.core.utils.UUIDs;
 import com.itamar.cassandra.connector.CassandraConnection;
-import com.itamar.cassandra.entity.Book;
 import com.itamar.cassandra.entity.Person;
-import com.itamar.cassandra.repository.BookRepository;
 import com.itamar.cassandra.repository.PersonRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -99,7 +97,6 @@ public class TestPersonRepository {
         personRepository.insertPerson(p5);
         personRepository.insertPerson(p6);
 
-
         List<Person> personList = personRepository.selectAllPeople();
 
         assertEquals(personList.size(), 6);
@@ -111,6 +108,14 @@ public class TestPersonRepository {
         List<Person> people = personRepository.selectAllPeople();
 
         assertTrue(people.size()>0);
+    }
+
+    @Test
+    public void testSelectDistinctLastNames() {
+
+        List<String> lastnameList = personRepository.selectDistinctLastNames();
+
+        assertTrue(lastnameList.size()>0);
     }
 
     @Test
